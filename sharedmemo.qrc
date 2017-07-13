@@ -7,5 +7,6 @@
         <file>Img/excel.png</file>
         <file>Img/view.png</file>
         <file>Img/printer.png</file>
+        <file>Lang/Lang_ko_KR.qm</file>
     </qresource>
 </RCC>

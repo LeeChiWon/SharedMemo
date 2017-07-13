@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include <QtWidgets>
 #include "configurationdialog.h"
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
 
 namespace Ui {
 class MainWindow;
@@ -18,6 +21,8 @@ public:
     ~MainWindow();
 
     ConfigurationDialog ConfigurationDlg;
+signals:
+    void LanguageChanged();
 
 private slots:
     void on_actionHelp_triggered();
@@ -25,9 +30,13 @@ private slots:
     void on_actionExit_triggered();
     void on_actionExcel_triggered();
     void on_actionView_triggered();
+    void DBInit(QString);
 
 private:
     Ui::MainWindow *ui;
+    QTranslator Trans;
+
+    void LanguageChange();
 };
 
 #endif // MAINWINDOW_H
