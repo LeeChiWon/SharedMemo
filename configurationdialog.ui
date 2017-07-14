@@ -422,6 +422,22 @@
     <string>If All Search button Clicked, List is Output of Edit(Number).</string>
    </property>
   </widget>
+  <widget class="QCheckBox" name="checkBox_Backup">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>190</y>
+     <width>81</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Backup</string>
+   </property>
+   <property name="tristate">
+    <bool>false</bool>
+   </property>
+  </widget>
  </widget>
  <tabstops>
   <tabstop>lineEdit_ListOutpuCount</tabstop>
