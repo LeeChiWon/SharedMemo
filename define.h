@@ -1,0 +1,16 @@
+#ifndef DEFINE_H
+#define DEFINE_H
+
+#define SEARCH_A 0
+#define SEARCH_C 1
+
+#define SEPARATION_ERP 0
+#define SEPARATION_DRAWING 1
+#define SEPARATION_PROGRAM 2
+#define SEPARATION_ETC 3
+
+#define COLUMN_DATE 0
+#define COLUMN_CONTENT 1
+#define COLUMN_SEPARATION 2
+#define COLUMN_WRITER 3
+#endif // DEFINE_H

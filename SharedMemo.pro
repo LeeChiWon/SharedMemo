@@ -28,7 +28,8 @@ SOURCES += main.cpp\
     configurationdialog.cpp
 
 HEADERS  += mainwindow.h \
-    configurationdialog.h
+    configurationdialog.h \
+    define.h
 
 FORMS    += mainwindow.ui \
     configurationdialog.ui

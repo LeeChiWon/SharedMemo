@@ -3,6 +3,9 @@
 
 #include <QDialog>
 #include <QtWidgets>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
 
 namespace Ui {
 class ConfigurationDialog;
@@ -15,7 +18,9 @@ class ConfigurationDialog : public QDialog
 public:
     explicit ConfigurationDialog(QWidget *parent = 0);
     ~ConfigurationDialog();
-
+    QString DBName();
+    int ListCount();
+    QString User();
 
 private slots:
     void on_pushButton_DBPath_clicked();
@@ -26,6 +31,8 @@ private slots:
 private:
     Ui::ConfigurationDialog *ui;
     void ConfigurationLoad();
+    void ConfigurationSave();
+    void DBInit();
 };
 
 #endif // CONFIGURATIONDIALOG_H

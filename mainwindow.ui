@@ -238,6 +238,13 @@
          <bold>false</bold>
         </font>
        </property>
+       <property name="date">
+        <date>
+         <year>2017</year>
+         <month>1</month>
+         <day>1</day>
+        </date>
+       </property>
       </widget>
       <widget class="QLabel" name="label_3">
        <property name="geometry">
@@ -404,7 +411,11 @@
      </widget>
     </item>
     <item row="1" column="0">
-     <widget class="QTableWidget" name="tableWidget"/>
+     <widget class="QTableWidget" name="tableWidget">
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+     </widget>
     </item>
     <item row="2" column="0">
      <widget class="QGroupBox" name="groupBox_2">
