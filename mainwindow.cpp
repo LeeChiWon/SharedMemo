@@ -9,9 +9,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(this,SIGNAL(LanguageChanged()),&ConfigurationDlg,SLOT(LanguageChanged()));
     connect(ui->tableWidget->horizontalHeader(),SIGNAL(sectionClicked(int)),this,SLOT(sectionClicked(int)));
+    connect(qApp,SIGNAL(commitDataRequest(QSessionManager&)),this,SLOT(commitDataRequest(QSessionManager&)),Qt::DirectConnection);
     LanguageChange();
     ui->dateEdit_StartDate->setDate(QDate::currentDate());
     ui->dateEdit_EndDate->setDate(QDate::currentDate());
+    TrayIconInit();
     ComboBoxInit();
     TableWidgetInit();
     DBInit();
@@ -24,7 +26,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionHelp_triggered()
 {
-
+    QString newfilename = QString("%1/help.pdf").arg(QApplication::applicationDirPath());
+    QDesktopServices::openUrl(QUrl(newfilename.prepend( "file:///" )));
 }
 
 void MainWindow::on_actionConfiguration_triggered()
@@ -34,17 +37,36 @@ void MainWindow::on_actionConfiguration_triggered()
 
 void MainWindow::on_actionExit_triggered()
 {
-
+    this->hide();
+    this->close();
 }
 
 void MainWindow::on_actionExcel_triggered()
 {
+    QFileDialog FileDialog;
+    QString FileName=FileDialog.getSaveFileName(this,tr("Save File"),"c://",tr("Excel (*.xlsx)"));
+
+    if(!FileName.isEmpty() || !FileName.isNull())
+    {
+        ExcelSave(FileName);
+    }
 
 }
 
 void MainWindow::on_actionView_triggered()
 {
+    /*  QPrinter Printer;
+    QPrintDialog PrinterDlg(&Printer);
 
+    if(PrinterDlg.exec()==QDialog::Accepted)
+    {
+        QPainter Painter(&Printer);
+        ui->tableWidget->render(&Painter);
+    }*/
+
+    QPrintPreviewDialog dialog;
+    connect(&dialog, SIGNAL(paintRequested(QPrinter*)), this, SLOT(print(QPrinter*)));
+    dialog.exec();
 }
 
 void MainWindow::DBInit()
@@ -64,18 +86,21 @@ void MainWindow::DBInit()
         // CREATE TABLE "main_tb" ( `idx` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `date` TEXT, `content` TEXT, `separation` TEXT, `writer` TEXT )
 
         QSqlQuery query(DB);
-        query.exec(QString("select * from main_tb order by date desc limit %1").arg(ConfigurationDlg.ListCount()));
+        query.exec(QString("select * from main_tb order by idx desc limit %1").arg(ConfigurationDlg.ListCount()));
 
         while(query.next())
         {
             ui->tableWidget->setRowCount(ui->tableWidget->rowCount()+1);
+            ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,COLUMN_IDX,new QTableWidgetItem(query.value("idx").toString()));
             ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,COLUMN_DATE,new QTableWidgetItem(query.value("date").toString()));
             ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,COLUMN_CONTENT,new QTableWidgetItem(query.value("content").toString()));
             ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,COLUMN_SEPARATION,new QTableWidgetItem(query.value("separation").toString()));
             ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,COLUMN_WRITER,new QTableWidgetItem(query.value("writer").toString()));
         }
-        ui->tableWidget->resizeRowsToContents();
-        ui->tableWidget->resizeColumnsToContents();
+       // ui->tableWidget->resizeRowsToContents();
+       // ui->tableWidget->resizeColumnsToContents();
+
+
         DB.close();
     }
     catch(QException &e)
@@ -122,7 +147,7 @@ void MainWindow::Search(int Select)
         switch(Select)
         {
         case SEARCH_A:
-            query.exec(QString("select * from main_tb order by date desc limit %1").arg(ConfigurationDlg.ListCount()));
+            query.exec(QString("select * from main_tb order by idx desc limit %1").arg(ConfigurationDlg.ListCount()));
             break;
         case SEARCH_C:
             QString QueryText=QString("select * from main_tb where date between '%1' and '%2'")
@@ -146,6 +171,7 @@ void MainWindow::Search(int Select)
             {
                 QueryText.append(QString(" and content like '\%%1\%'").arg(ui->lineEdit_Search_Content->text()));
             }
+            QueryText.append(" Order by idx desc");
             query.exec(QueryText);
             break;
         }
@@ -153,13 +179,14 @@ void MainWindow::Search(int Select)
         while(query.next())
         {
             ui->tableWidget->setRowCount(ui->tableWidget->rowCount()+1);
+            ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,COLUMN_IDX,new QTableWidgetItem(query.value("idx").toString()));
             ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,COLUMN_DATE,new QTableWidgetItem(query.value("date").toString()));
             ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,COLUMN_CONTENT,new QTableWidgetItem(query.value("content").toString()));
             ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,COLUMN_SEPARATION,new QTableWidgetItem(query.value("separation").toString()));
             ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,COLUMN_WRITER,new QTableWidgetItem(query.value("writer").toString()));
         }
-        ui->tableWidget->resizeColumnsToContents();
-        ui->tableWidget->resizeRowsToContents();
+       // ui->tableWidget->resizeColumnsToContents();
+      //  ui->tableWidget->resizeRowsToContents();
         DB.close();
     }
 
@@ -199,8 +226,10 @@ void MainWindow::sectionClicked(int column)
 
 void MainWindow::TableWidgetInit()
 {
-    ui->tableWidget->setColumnCount(4);
-    ui->tableWidget->setHorizontalHeaderLabels(QStringList()<<tr("Date")<<tr("Content")<<tr("Separation")<<tr("Writer"));
+    ui->tableWidget->setColumnCount(5);
+    ui->tableWidget->setHorizontalHeaderLabels(QStringList()<<tr("idx")<<tr("Date")<<tr("Content")<<tr("Separation")<<tr("Writer"));
+    ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    ui->tableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 }
 
 void MainWindow::Input()
@@ -227,13 +256,14 @@ void MainWindow::Input()
         while(query.next())
         {
             ui->tableWidget->setRowCount(ui->tableWidget->rowCount()+1);
+            ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,COLUMN_IDX,new QTableWidgetItem(query.value("idx").toString()));
             ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,COLUMN_DATE,new QTableWidgetItem(query.value("date").toString()));
             ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,COLUMN_CONTENT,new QTableWidgetItem(query.value("content").toString()));
             ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,COLUMN_SEPARATION,new QTableWidgetItem(query.value("separation").toString()));
             ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,COLUMN_WRITER,new QTableWidgetItem(query.value("writer").toString()));
         }
-        ui->tableWidget->resizeColumnsToContents();
-        ui->tableWidget->resizeRowsToContents();
+        //ui->tableWidget->resizeColumnsToContents();
+       // ui->tableWidget->resizeRowsToContents();
         DB.close();
     }
 
@@ -242,6 +272,100 @@ void MainWindow::Input()
         QMessageBox::warning(this,tr("Warning"),QString("%1\n%2").arg(tr("Database Error!"),e.what()),QMessageBox::Ok);
         QSqlDatabase::removeDatabase("MainDB");
     }
+}
+
+void MainWindow::Backup()
+{
+    if(ConfigurationDlg.BackupCheck())
+    {
+        QString FilePath=ConfigurationDlg.DBName();
+        FilePath.replace("SharedMemo.db","Backup");
+
+        QDir Dir(FilePath);
+        if(!Dir.exists())
+        {
+            Dir.mkdir(FilePath);
+        }
+
+        FilePath.append(QString("/%1.db").arg(QDate::currentDate().toString("yyyy-MM-dd")));
+        if(QFile::copy(ConfigurationDlg.DBName(),FilePath))
+        {
+            //qDebug()<<"File backup save.";
+        }
+    }
+}
+
+void MainWindow::ExcelSave(QString FileName)
+{
+    QXlsx::Document xlsx(FileName);
+    QStringList ColumnTitle=QStringList()<<tr("idx")<<tr("Date")<<tr("Content")<<tr("Separation")<<tr("Writer");
+    int ColumnWidth[5]={6,10,80,10,10};
+    QXlsx::Format format;
+
+    format.setBorderStyle(QXlsx::Format::BorderThin);
+    format.setFontSize(10);
+    format.setFontBold(false);
+
+    for(int i=0; i<ui->tableWidget->rowCount(); i++)
+    {
+        for(int j=0; j<5; j++)
+        {
+            xlsx.write(i+2,j+1,ui->tableWidget->item(i,j)->text(),format);
+        }
+    }
+
+    format.setBottomBorderStyle(QXlsx::Format::BorderDouble);
+    format.setFontBold(true);
+    format.setFontSize(13);
+
+    for(int i=1; i<6; i++)
+    {
+        xlsx.setColumnWidth(i,ColumnWidth[i-1]);
+        xlsx.write(1,i,ColumnTitle.at(i-1),format);
+    }
+
+    if(xlsx.save())
+    {
+        QMessageBox::information(this,tr("Save"),tr("Excel File is Saved."),QMessageBox::Ok);
+    }
+
+    xlsx.deleteLater();
+}
+
+void MainWindow::TrayIconInit()
+{
+    TrayIcon=new QSystemTrayIcon(this);
+    TrayIconMenu=new QMenu(this);
+    QList<QAction*>ActionList;
+    ActionList<<ui->actionView<<ui->actionExit;
+    TrayIconMenu->addActions(ActionList);
+    TrayIcon->setContextMenu(TrayIconMenu);
+    QIcon Icon(":/Img/notes.png");
+    TrayIcon->setIcon(Icon);
+    TrayIcon->show();
+    TrayIcon->setToolTip(tr("SharedMemo"));
+    TrayIcon->showMessage(tr("SharedMemo"),tr("Executing..."),QSystemTrayIcon::Information,5000);
+    connect(TrayIcon,SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this,SLOT(onSystemTryIconClicked(QSystemTrayIcon::ActivationReason)));
+}
+
+void MainWindow::onSystemTryIconClicked(QSystemTrayIcon::ActivationReason reason){
+    switch(reason)
+    {
+    case QSystemTrayIcon::Trigger:
+    case QSystemTrayIcon::DoubleClick:
+        this->setWindowState(Qt::WindowActive);
+        this->show();
+        break;
+    }
+}
+
+void MainWindow::hideEvent(QHideEvent *event)
+{
+    if(isMinimized())
+    {
+        this->hide();
+    }
+    QWidget::hideEvent(event);
 }
 
 void MainWindow::on_pushButton_Input_clicked()
@@ -269,4 +393,36 @@ void MainWindow::on_tableWidget_itemChanged(QTableWidgetItem *item)
         item->setFont(Font);
         break;
     }
+}
+
+void MainWindow::commitDataRequest(QSessionManager &)
+{
+    Backup();
+}
+
+void MainWindow::print(QPrinter *printer)
+{
+    QPainter painter;
+    if(!painter.begin(printer)) {
+        QMessageBox::warning(this,tr("Warning"),tr("can't start printer"),QMessageBox::Ok);
+        return;
+    }
+    // print table
+    TablePrinter tablePrinter(&painter, printer);
+    QVector<int> columnStretch = QVector<int>() << 2 << 4 << 20 << 3 << 3;
+    if(!tablePrinter.printTable(ui->tableWidget->model(), columnStretch)) {
+        QMessageBox::warning(this,tr("Error"),tablePrinter.lastError(),QMessageBox::Ok);
+    }
+    painter.end();
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    event->ignore();
+    if(TrayIcon->isVisible())
+    {
+        TrayIcon->hide();
+    }
+    Backup();
+    event->accept();
 }

@@ -8,6 +8,11 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include "define.h"
+#include <QtPrintSupport/QPrinter>
+#include <QtPrintSupport/QPrintDialog>
+#include <QtPrintSupport/QPrintPreviewDialog>
+#include "tableprinter.h"
+#include "QtXlsx"
 
 namespace Ui {
 class MainWindow;
@@ -37,19 +42,27 @@ private slots:
     void sectionClicked(int);
     void on_pushButton_Input_clicked();
     void on_tableWidget_itemChanged(QTableWidgetItem *item);
+    void commitDataRequest(QSessionManager&);
+    void print(QPrinter*);
+    void onSystemTryIconClicked(QSystemTrayIcon::ActivationReason);
 
 private:
     Ui::MainWindow *ui;
     QTranslator Trans;
     bool bSort;
+    QSystemTrayIcon *TrayIcon;
+    QMenu *TrayIconMenu;
 
+    void closeEvent(QCloseEvent *event);
+    void hideEvent(QHideEvent *event);
     void LanguageChange();
     void ComboBoxInit();
     void Search(int);
     void TableWidgetInit();
     void Input();
-
-
+    void Backup();
+    void ExcelSave(QString);
+    void TrayIconInit();
 };
 
 #endif // MAINWINDOW_H

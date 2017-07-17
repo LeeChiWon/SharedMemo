@@ -21,12 +21,16 @@ public:
     QString DBName();
     int ListCount();
     QString User();
+    bool BackupCheck();
 
 private slots:
     void on_pushButton_DBPath_clicked();
     void on_pushButton_Apply_clicked();
     void on_pushButton_Cancel_clicked();
     void LanguageChanged();
+
+
+    void on_checkBox_StartApplication_clicked(bool checked);
 
 private:
     Ui::ConfigurationDialog *ui;

@@ -5,10 +5,9 @@ ConfigurationDialog::ConfigurationDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ConfigurationDialog)
 {
-    ui->setupUi(this);
-
+    ui->setupUi(this);    
     DBInit();
-    ConfigurationLoad();
+    ConfigurationLoad();   
 }
 
 ConfigurationDialog::~ConfigurationDialog()
@@ -29,6 +28,11 @@ int ConfigurationDialog::ListCount()
 QString ConfigurationDialog::User()
 {
     return ui->lineEdit_User->text();
+}
+
+bool ConfigurationDialog::BackupCheck()
+{
+    return ui->checkBox_Backup->isChecked();
 }
 
 void ConfigurationDialog::on_pushButton_DBPath_clicked()
@@ -72,6 +76,7 @@ void ConfigurationDialog::ConfigurationLoad()
         ui->lineEdit_User->setText(query.value("user").toString());
         ui->lineEdit_ListOutpuCount->setText(query.value("listcount").toString());
         ui->checkBox_Backup->setChecked(query.value("backup").toBool());
+        ui->checkBox_StartApplication->setChecked(query.value("boot").toBool());
         DB.close();
 
       //  QMessageBox::information(this,tr("information"),tr("Configuration Load Success!"),QMessageBox::Ok);
@@ -97,8 +102,9 @@ void ConfigurationDialog::ConfigurationSave()
         }
 
         QSqlQuery query(DB);
-        query.exec(QString("update config_tb set user='%1', databasepath='%2', listcount=%3, backup=%4")
-                   .arg(ui->lineEdit_User->text(),ui->lineEdit_DBPath->text()).arg(ui->lineEdit_ListOutpuCount->text().toInt()).arg(ui->checkBox_Backup->isChecked()));
+        query.exec(QString("update config_tb set user='%1', databasepath='%2', listcount=%3, backup=%4, boot=%5")
+                   .arg(ui->lineEdit_User->text(),ui->lineEdit_DBPath->text()).arg(ui->lineEdit_ListOutpuCount->text().toInt()).arg(ui->checkBox_Backup->isChecked())
+                   .arg(ui->checkBox_StartApplication->isChecked()));
         query.next();
         DB.close();
 
@@ -126,13 +132,28 @@ void ConfigurationDialog::DBInit()
         }
 
         QSqlQuery query(DB);
-        query.exec("create table if not exists config_tb(user text,databasepath text,listcount int, backup int)");
-        query.exec(QString("insert into config_tb(user,databasepath,listcount) select 'test','test', 100, 0 where not exists(select * from config_tb)"));
+        query.exec("create table if not exists config_tb(user text,databasepath text,listcount int, backup int, boot int)");
+        query.exec(QString("insert into config_tb(user,databasepath,listcount,backup,boot) select 'test','test', 100, 0, 0 where not exists(select * from config_tb)"));
         DB.close();
     }
     catch(QException &e)
     {
         QMessageBox::warning(this,tr("Warning"),QString("%1\n%2").arg(tr("Config Database Error!"),e.what()),QMessageBox::Ok);
         QSqlDatabase::removeDatabase("ConfigDB");
+    }
+}
+
+void ConfigurationDialog::on_checkBox_StartApplication_clicked(bool checked)
+{
+    QSettings Settings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+                       QSettings::NativeFormat);
+    QString Path=QString("\"%1\"").arg(QCoreApplication::applicationFilePath().replace('/','\\'));
+    if(checked)
+    {
+        Settings.setValue("SharedMemo",Path);
+    }
+    else
+    {
+        Settings.remove("SharedMemo");
     }
 }

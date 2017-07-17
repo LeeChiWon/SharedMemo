@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui sql xlsx
+QT       += core gui sql xlsx printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -25,11 +25,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    configurationdialog.cpp
+    configurationdialog.cpp \
+    tableprinter.cpp
 
 HEADERS  += mainwindow.h \
     configurationdialog.h \
-    define.h
+    define.h \
+    tableprinter.h
 
 FORMS    += mainwindow.ui \
     configurationdialog.ui
@@ -39,3 +41,10 @@ TRANSLATIONS += Lang_ko_KR.ts\
 
 RESOURCES += \
     sharedmemo.qrc
+
+win32
+{
+   RC_FILE = SharedMemo.rc
+   CONFIG += embed_manifest_exe
+   QMAKE_LFLAGS_WINDOWS += /MANIFESTUAC:level=\'requireAdministrator\'
+}
