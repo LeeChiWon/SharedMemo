@@ -15,6 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->dateEdit_EndDate->setDate(QDate::currentDate());
     TrayIconInit();
     ComboBoxInit();
+    ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    ui->tableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     TableWidgetInit();
     DBInit();
 }
@@ -73,7 +75,7 @@ void MainWindow::DBInit()
 {
     QSqlDatabase DB=QSqlDatabase::addDatabase("QSQLITE","MainDB");
     DB.setDatabaseName(ConfigurationDlg.DBName());
-    ui->tableWidget->setRowCount(0);
+
     try
     {
         if(!DB.open())
@@ -82,6 +84,10 @@ void MainWindow::DBInit()
             QSqlDatabase::removeDatabase("MainDB");
             return;
         }
+
+        ui->tableWidget->clear();
+        ui->tableWidget->setRowCount(0);
+        TableWidgetInit();
 
         // CREATE TABLE "main_tb" ( `idx` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `date` TEXT, `content` TEXT, `separation` TEXT, `writer` TEXT )
 
@@ -97,8 +103,8 @@ void MainWindow::DBInit()
             ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,COLUMN_SEPARATION,new QTableWidgetItem(query.value("separation").toString()));
             ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,COLUMN_WRITER,new QTableWidgetItem(query.value("writer").toString()));
         }
-       // ui->tableWidget->resizeRowsToContents();
-       // ui->tableWidget->resizeColumnsToContents();
+        ui->tableWidget->resizeRowsToContents();
+        ui->tableWidget->resizeColumnsToContents();
 
 
         DB.close();
@@ -130,8 +136,6 @@ void MainWindow::ComboBoxInit()
 
 void MainWindow::Search(int Select)
 {
-    ui->tableWidget->setRowCount(0);
-
     QSqlDatabase DB=QSqlDatabase::database("MainDB");
 
     try
@@ -141,6 +145,10 @@ void MainWindow::Search(int Select)
             QSqlDatabase::removeDatabase("MainDB");
             DBInit();
         }
+
+        ui->tableWidget->clear();
+        ui->tableWidget->setRowCount(0);
+        TableWidgetInit();
 
         QSqlQuery query(DB);
 
@@ -171,7 +179,7 @@ void MainWindow::Search(int Select)
             {
                 QueryText.append(QString(" and content like '\%%1\%'").arg(ui->lineEdit_Search_Content->text()));
             }
-            QueryText.append(" Order by idx desc");
+            QueryText.append(" order by idx desc");
             query.exec(QueryText);
             break;
         }
@@ -185,8 +193,8 @@ void MainWindow::Search(int Select)
             ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,COLUMN_SEPARATION,new QTableWidgetItem(query.value("separation").toString()));
             ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,COLUMN_WRITER,new QTableWidgetItem(query.value("writer").toString()));
         }
-       // ui->tableWidget->resizeColumnsToContents();
-      //  ui->tableWidget->resizeRowsToContents();
+        ui->tableWidget->resizeColumnsToContents();
+        ui->tableWidget->resizeRowsToContents();
         DB.close();
     }
 
@@ -228,8 +236,6 @@ void MainWindow::TableWidgetInit()
 {
     ui->tableWidget->setColumnCount(5);
     ui->tableWidget->setHorizontalHeaderLabels(QStringList()<<tr("idx")<<tr("Date")<<tr("Content")<<tr("Separation")<<tr("Writer"));
-    ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-    ui->tableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 }
 
 void MainWindow::Input()
@@ -243,6 +249,9 @@ void MainWindow::Input()
             QSqlDatabase::removeDatabase("MainDB");
             DBInit();
         }
+        ui->tableWidget->clear();
+        ui->tableWidget->setRowCount(0);
+        TableWidgetInit();
 
         QSqlQuery query(DB);
 
@@ -250,8 +259,8 @@ void MainWindow::Input()
                    .arg(QDateTime::currentDateTime().toString("yyyy-MM-dd"),ui->textEdit_Input_Content->toPlainText())
                    .arg(ui->comboBox_Input_Separation->currentText(),ConfigurationDlg.User()));
 
-        query.exec(QString("select * from main_tb order by date desc limit %1").arg(ConfigurationDlg.ListCount()));
-        ui->tableWidget->setRowCount(0);
+        query.exec(QString("select * from main_tb order by idx desc limit %1").arg(ConfigurationDlg.ListCount()));
+
 
         while(query.next())
         {
@@ -262,8 +271,8 @@ void MainWindow::Input()
             ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,COLUMN_SEPARATION,new QTableWidgetItem(query.value("separation").toString()));
             ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,COLUMN_WRITER,new QTableWidgetItem(query.value("writer").toString()));
         }
-        //ui->tableWidget->resizeColumnsToContents();
-       // ui->tableWidget->resizeRowsToContents();
+        ui->tableWidget->resizeColumnsToContents();
+        ui->tableWidget->resizeRowsToContents();
         DB.close();
     }
 
