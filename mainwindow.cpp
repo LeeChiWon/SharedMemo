@@ -230,6 +230,10 @@ void MainWindow::sectionClicked(int column)
         ui->tableWidget->sortByColumn(column,Qt::DescendingOrder);
         bSort=false;
     }
+
+    ui->tableWidget->resizeColumnsToContents();
+    ui->tableWidget->resizeRowsToContents();
+    ui->tableWidget->setSortingEnabled(false);
 }
 
 void MainWindow::TableWidgetInit()
