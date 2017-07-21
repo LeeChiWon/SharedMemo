@@ -217,7 +217,7 @@ void MainWindow::on_pushButton_TermsSearch_clicked()
 
 void MainWindow::sectionClicked(int column)
 {
-    ui->tableWidget->setSortingEnabled(true);
+    //ui->tableWidget->setSortingEnabled(true);
 
     if(!bSort) //ASC
     {
@@ -233,7 +233,7 @@ void MainWindow::sectionClicked(int column)
 
     ui->tableWidget->resizeColumnsToContents();
     ui->tableWidget->resizeRowsToContents();
-    ui->tableWidget->setSortingEnabled(false);
+    //ui->tableWidget->setSortingEnabled(false);
 }
 
 void MainWindow::TableWidgetInit()
