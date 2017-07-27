@@ -31,6 +31,14 @@ void WorkThread::Timeout()
             CompareDateTime.clear();
         }
     }
+    else
+    {
+        QFileInfo FileInfo(FilePath);
+        if(FileInfo.exists())
+        {
+            CompareDateTime=FileInfo.lastModified().toString("yyyy-MM-dd HH:mm");
+        }
+    }
 }
 
 void WorkThread::run()
