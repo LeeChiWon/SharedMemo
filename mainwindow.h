@@ -13,6 +13,7 @@
 #include <QtPrintSupport/QPrintPreviewDialog>
 #include "tableprinter.h"
 #include "QtXlsx"
+#include "workthread.h"
 
 namespace Ui {
 class MainWindow;
@@ -27,6 +28,7 @@ public:
     ~MainWindow();
 
     ConfigurationDialog ConfigurationDlg;
+    WorkThread *workThread;
 signals:
     void LanguageChanged();
 
@@ -45,6 +47,7 @@ private slots:
     void commitDataRequest(QSessionManager&);
     void print(QPrinter*);
     void onSystemTryIconClicked(QSystemTrayIcon::ActivationReason);
+    void MemoUpdate();
 
 private:
     Ui::MainWindow *ui;

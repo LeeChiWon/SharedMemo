@@ -101,8 +101,8 @@
     <name>MainWindow</name>
     <message>
         <location filename="mainwindow.ui" line="84"/>
-        <location filename="mainwindow.cpp" line="340"/>
-        <location filename="mainwindow.cpp" line="341"/>
+        <location filename="mainwindow.cpp" line="369"/>
+        <location filename="mainwindow.cpp" line="370"/>
         <source>SharedMemo</source>
         <translation>공유메모</translation>
     </message>
@@ -114,8 +114,8 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="167"/>
-        <location filename="mainwindow.cpp" line="226"/>
-        <location filename="mainwindow.cpp" line="295"/>
+        <location filename="mainwindow.cpp" line="252"/>
+        <location filename="mainwindow.cpp" line="324"/>
         <source>Date</source>
         <translation>날짜</translation>
     </message>
@@ -127,16 +127,16 @@
     <message>
         <location filename="mainwindow.ui" line="275"/>
         <location filename="mainwindow.ui" line="479"/>
-        <location filename="mainwindow.cpp" line="226"/>
-        <location filename="mainwindow.cpp" line="295"/>
+        <location filename="mainwindow.cpp" line="252"/>
+        <location filename="mainwindow.cpp" line="324"/>
         <source>Separation</source>
         <translation>구분</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="330"/>
         <location filename="mainwindow.ui" line="534"/>
-        <location filename="mainwindow.cpp" line="226"/>
-        <location filename="mainwindow.cpp" line="295"/>
+        <location filename="mainwindow.cpp" line="252"/>
+        <location filename="mainwindow.cpp" line="324"/>
         <source>Content</source>
         <translation>내용</translation>
     </message>
@@ -147,170 +147,180 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="448"/>
-        <location filename="mainwindow.ui" line="589"/>
+        <location filename="mainwindow.ui" line="653"/>
         <source>Input</source>
         <translation>입력</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="607"/>
+        <location filename="mainwindow.ui" line="671"/>
         <source>Menu</source>
         <translation>메뉴</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="611"/>
+        <location filename="mainwindow.ui" line="675"/>
         <source>Print</source>
         <translation>인쇄</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="634"/>
+        <location filename="mainwindow.ui" line="698"/>
         <source>Help</source>
         <translation>도움말</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="637"/>
+        <location filename="mainwindow.ui" line="701"/>
         <source>F1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="646"/>
+        <location filename="mainwindow.ui" line="710"/>
         <source>Configuration</source>
         <translation>환경설정</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="649"/>
+        <location filename="mainwindow.ui" line="713"/>
         <source>Ctrl+S</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="658"/>
+        <location filename="mainwindow.ui" line="722"/>
         <source>Exit</source>
         <translation>종료</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="661"/>
+        <location filename="mainwindow.ui" line="725"/>
         <source>Alt+X</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="670"/>
+        <location filename="mainwindow.ui" line="734"/>
         <source>Excel</source>
         <translation>엑셀</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="673"/>
+        <location filename="mainwindow.ui" line="737"/>
         <source>Ctrl+E</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="682"/>
+        <location filename="mainwindow.ui" line="746"/>
         <source>View</source>
         <translation>화면</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="685"/>
+        <location filename="mainwindow.ui" line="749"/>
         <source>Ctrl+P</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="46"/>
+        <location filename="mainwindow.cpp" line="59"/>
         <source>Save File</source>
         <translation>저장 파일</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="46"/>
+        <location filename="mainwindow.cpp" line="59"/>
         <source>Excel (*.xlsx)</source>
         <translation>엑셀 (*.xlsx)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="80"/>
-        <location filename="mainwindow.cpp" line="105"/>
-        <location filename="mainwindow.cpp" line="191"/>
-        <location filename="mainwindow.cpp" line="266"/>
-        <location filename="mainwindow.cpp" line="369"/>
-        <location filename="mainwindow.cpp" line="401"/>
+        <location filename="mainwindow.cpp" line="93"/>
+        <location filename="mainwindow.cpp" line="124"/>
+        <location filename="mainwindow.cpp" line="213"/>
+        <location filename="mainwindow.cpp" line="295"/>
+        <location filename="mainwindow.cpp" line="404"/>
+        <location filename="mainwindow.cpp" line="436"/>
         <source>Warning</source>
         <translation>경고</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="80"/>
+        <location filename="mainwindow.cpp" line="93"/>
         <source>Database open error!</source>
         <translation>데이터베이스 열기 에러!</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="105"/>
+        <location filename="mainwindow.cpp" line="124"/>
         <source>Config Database Error!</source>
         <translation>설정 데이터베이스 에러!</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="120"/>
+        <location filename="mainwindow.cpp" line="139"/>
         <source>ERP</source>
         <translation>ERP</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="120"/>
+        <location filename="mainwindow.cpp" line="139"/>
         <source>Drawing</source>
         <translation>도면</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="120"/>
+        <location filename="mainwindow.cpp" line="139"/>
         <source>Program</source>
         <translation>프로그램</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="120"/>
+        <location filename="mainwindow.cpp" line="139"/>
         <source>Etc</source>
         <translation>기타</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="120"/>
+        <location filename="mainwindow.cpp" line="139"/>
         <source>All</source>
         <translation>전체</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="191"/>
-        <location filename="mainwindow.cpp" line="266"/>
+        <location filename="mainwindow.cpp" line="213"/>
+        <location filename="mainwindow.cpp" line="295"/>
         <source>Database Error!</source>
         <translation>데이터베이스 에러!</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="226"/>
-        <location filename="mainwindow.cpp" line="295"/>
+        <location filename="mainwindow.cpp" line="252"/>
+        <location filename="mainwindow.cpp" line="324"/>
         <source>Writer</source>
         <translation>작성자</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="226"/>
-        <location filename="mainwindow.cpp" line="295"/>
+        <location filename="mainwindow.cpp" line="252"/>
+        <location filename="mainwindow.cpp" line="324"/>
         <source>idx</source>
         <translation>순번</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="323"/>
+        <location filename="mainwindow.cpp" line="352"/>
         <source>Save</source>
         <translation>저장</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="323"/>
+        <location filename="mainwindow.cpp" line="352"/>
         <source>Excel File is Saved.</source>
         <translation>엑셀파일로 저장되었습니다.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="341"/>
+        <location filename="mainwindow.cpp" line="370"/>
         <source>Executing...</source>
         <translation>실행중...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="369"/>
+        <location filename="mainwindow.cpp" line="388"/>
+        <source>Information</source>
+        <translation>정보</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="388"/>
+        <source>Memo is Update &amp; Add</source>
+        <translation>새 메모가 추가 &amp; 업데이트 되었습니다</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="404"/>
         <source>Content is NULL.</source>
         <translation>내용칸이 비어있습니다.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="401"/>
+        <location filename="mainwindow.cpp" line="436"/>
         <source>can&apos;t start printer</source>
         <translation>프린터를 사용할 수 없습니다</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="408"/>
+        <location filename="mainwindow.cpp" line="443"/>
         <source>Error</source>
         <translation>에러</translation>
     </message>

@@ -26,12 +26,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp\
         mainwindow.cpp \
     configurationdialog.cpp \
-    tableprinter.cpp
+    tableprinter.cpp \
+    workthread.cpp
 
 HEADERS  += mainwindow.h \
     configurationdialog.h \
     define.h \
-    tableprinter.h
+    tableprinter.h \
+    workthread.h
 
 FORMS    += mainwindow.ui \
     configurationdialog.ui

@@ -19,10 +19,20 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     TableWidgetInit();
     DBInit();
+
+    workThread=new WorkThread();
+    workThread->FilePath=ConfigurationDlg.DBName();
+    connect(workThread,SIGNAL(MemoUpdate()),this,SLOT(MemoUpdate()));
+    workThread->start();
 }
 
 MainWindow::~MainWindow()
 {
+    if(workThread->isRunning())
+    {
+        workThread->quit();
+    }
+
     delete ui;
 }
 
@@ -370,6 +380,12 @@ void MainWindow::onSystemTryIconClicked(QSystemTrayIcon::ActivationReason reason
         this->show();
         break;
     }
+}
+
+void MainWindow::MemoUpdate()
+{
+    on_pushButton_AllSearch_clicked();
+    QMessageBox::information(this,tr("Information"),tr("Memo is Update & Add"),QMessageBox::Ok);
 }
 
 void MainWindow::hideEvent(QHideEvent *event)
