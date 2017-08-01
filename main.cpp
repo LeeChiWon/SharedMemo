@@ -12,6 +12,7 @@ int main(int argc, char *argv[])
         QMessageBox::information(&w,QObject::tr("SharedMemo"),QObject::tr("Program excuting..."),QMessageBox::Ok);
         exit(0);
     }
-    w.show();
+    w.show(); 
     return a.exec();
 }
+

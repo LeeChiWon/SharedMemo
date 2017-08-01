@@ -4,9 +4,8 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
-{
-    ui->setupUi(this);
-
+{    
+    ui->setupUi(this);    
     connect(this,SIGNAL(LanguageChanged()),&ConfigurationDlg,SLOT(LanguageChanged()));
     connect(ui->tableWidget->horizontalHeader(),SIGNAL(sectionClicked(int)),this,SLOT(sectionClicked(int)));
     connect(qApp,SIGNAL(commitDataRequest(QSessionManager&)),this,SLOT(commitDataRequest(QSessionManager&)),Qt::DirectConnection);
@@ -24,6 +23,9 @@ MainWindow::MainWindow(QWidget *parent) :
     workThread->FilePath=ConfigurationDlg.DBName();
     connect(workThread,SIGNAL(MemoUpdate()),this,SLOT(MemoUpdate()));
     workThread->start();
+
+    Settings=new QSettings("SharedMemoOrg","SharedMemo",this);
+    restoreGeometry(Settings->value("geometry/SharedMemoGeometry").toByteArray());
 }
 
 MainWindow::~MainWindow()
@@ -453,5 +455,9 @@ void MainWindow::closeEvent(QCloseEvent *event)
         TrayIcon->hide();
     }
     Backup();
+
+    Settings->setValue("geometry/SharedMemoGeometry",saveGeometry());
     event->accept();
 }
+
+\

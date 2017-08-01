@@ -55,6 +55,7 @@ private:
     bool bSort;
     QSystemTrayIcon *TrayIcon;
     QMenu *TrayIconMenu;
+    QSettings *Settings;
 
     void closeEvent(QCloseEvent *event);
     void hideEvent(QHideEvent *event);
