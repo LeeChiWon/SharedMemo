@@ -14,6 +14,7 @@
 #include "tableprinter.h"
 #include "QtXlsx"
 #include "workthread.h"
+#include "tableeditdialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -48,6 +49,11 @@ private slots:
     void print(QPrinter*);
     void onSystemTryIconClicked(QSystemTrayIcon::ActivationReason);
     void MemoUpdate();
+    void on_tableWidget_itemDoubleClicked(QTableWidgetItem *item);
+    void TableWidgetMenuShow(const QPoint &pos);
+    void on_actionEdit_triggered(bool checked);
+    void on_actionDelete_triggered(bool checked);
+    void Edit(QString,QString,QString);
 
 private:
     Ui::MainWindow *ui;
@@ -56,6 +62,7 @@ private:
     QSystemTrayIcon *TrayIcon;
     QMenu *TrayIconMenu;
     QSettings *Settings;
+    QMenu *TableWidgetMenu;
 
     void closeEvent(QCloseEvent *event);
     void hideEvent(QHideEvent *event);
@@ -64,6 +71,7 @@ private:
     void Search(int);
     void TableWidgetInit();
     void Input();
+    void Delete();
     void Backup();
     void ExcelSave(QString);
     void TrayIconInit();

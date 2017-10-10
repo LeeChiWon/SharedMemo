@@ -27,16 +27,19 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     configurationdialog.cpp \
     tableprinter.cpp \
-    workthread.cpp
+    workthread.cpp \
+    tableeditdialog.cpp
 
 HEADERS  += mainwindow.h \
     configurationdialog.h \
     define.h \
     tableprinter.h \
-    workthread.h
+    workthread.h \
+    tableeditdialog.h
 
 FORMS    += mainwindow.ui \
-    configurationdialog.ui
+    configurationdialog.ui \
+    tableeditdialog.ui
 
 TRANSLATIONS += Lang_ko_KR.ts\
                 Lang_en_US.ts

@@ -5,10 +5,11 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {    
-    ui->setupUi(this);    
+    ui->setupUi(this);
     connect(this,SIGNAL(LanguageChanged()),&ConfigurationDlg,SLOT(LanguageChanged()));
     connect(ui->tableWidget->horizontalHeader(),SIGNAL(sectionClicked(int)),this,SLOT(sectionClicked(int)));
     connect(qApp,SIGNAL(commitDataRequest(QSessionManager&)),this,SLOT(commitDataRequest(QSessionManager&)),Qt::DirectConnection);
+
     LanguageChange();
     ui->dateEdit_StartDate->setDate(QDate::currentDate());
     ui->dateEdit_EndDate->setDate(QDate::currentDate());
@@ -16,6 +17,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ComboBoxInit();
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui->tableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    ui->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->tableWidget,SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(TableWidgetMenuShow(QPoint)));
+    QList <QAction*> TableWidgetMenuActions;
+    TableWidgetMenuActions.append(ui->actionEdit);
+    TableWidgetMenuActions.append(ui->actionDelete);
+    TableWidgetMenu=new QMenu();
+    TableWidgetMenu->addActions(TableWidgetMenuActions);
     TableWidgetInit();
     DBInit();
 
@@ -103,6 +111,7 @@ void MainWindow::DBInit()
 
         // CREATE TABLE "main_tb" ( `idx` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `date` TEXT, `content` TEXT, `separation` TEXT, `writer` TEXT )
 
+        DB.transaction();
         QSqlQuery query(DB);
         query.exec(QString("select * from main_tb order by idx desc limit %1").arg(ConfigurationDlg.ListCount()));
 
@@ -118,7 +127,7 @@ void MainWindow::DBInit()
         ui->tableWidget->resizeRowsToContents();
         ui->tableWidget->resizeColumnsToContents();
 
-
+        DB.commit();
         DB.close();
     }
     catch(QException &e)
@@ -162,6 +171,7 @@ void MainWindow::Search(int Select)
         ui->tableWidget->setRowCount(0);
         TableWidgetInit();
 
+        DB.transaction();
         QSqlQuery query(DB);
 
         switch(Select)
@@ -207,6 +217,7 @@ void MainWindow::Search(int Select)
         }
         ui->tableWidget->resizeColumnsToContents();
         ui->tableWidget->resizeRowsToContents();
+        DB.commit();
         DB.close();
     }
 
@@ -268,7 +279,7 @@ void MainWindow::Input()
         ui->tableWidget->clear();
         ui->tableWidget->setRowCount(0);
         TableWidgetInit();
-
+        DB.transaction();
         QSqlQuery query(DB);
 
         query.exec(QString("insert into main_tb(date,content,separation,writer) values('%1','%2','%3','%4')")
@@ -287,6 +298,34 @@ void MainWindow::Input()
             ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,COLUMN_SEPARATION,new QTableWidgetItem(query.value("separation").toString()));
             ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,COLUMN_WRITER,new QTableWidgetItem(query.value("writer").toString()));
         }
+        ui->tableWidget->resizeColumnsToContents();
+        ui->tableWidget->resizeRowsToContents();
+        DB.commit();
+        DB.close();
+    }
+
+    catch(QException &e)
+    {
+        QMessageBox::warning(this,tr("Warning"),QString("%1\n%2").arg(tr("Database Error!"),e.what()),QMessageBox::Ok);
+        QSqlDatabase::removeDatabase("MainDB");
+    }
+}
+
+void MainWindow::Delete()
+{
+    QSqlDatabase DB=QSqlDatabase::database("MainDB");
+
+    try
+    {
+        if(!DB.isOpen())
+        {
+            QSqlDatabase::removeDatabase("MainDB");
+            DBInit();
+        }
+
+        QSqlQuery query(DB);
+        query.exec(QString("delete from main_tb where idx=%1").arg(ui->tableWidget->item(ui->tableWidget->currentRow(),0)->text().toInt()));
+
         ui->tableWidget->resizeColumnsToContents();
         ui->tableWidget->resizeRowsToContents();
         DB.close();
@@ -460,4 +499,64 @@ void MainWindow::closeEvent(QCloseEvent *event)
     event->accept();
 }
 
-\
+void MainWindow::on_tableWidget_itemDoubleClicked(QTableWidgetItem *item)
+{
+    on_actionEdit_triggered(true);
+}
+
+void MainWindow::TableWidgetMenuShow(const QPoint &pos)
+{
+    if(ui->tableWidget->rowCount()>0)
+    {
+        TableWidgetMenu->exec(ui->tableWidget->viewport()->mapToGlobal(pos));
+    }
+}
+
+void MainWindow::on_actionEdit_triggered(bool checked)
+{
+    TableEditDialog Dlg;
+    connect(&Dlg,SIGNAL(Edit(QString,QString,QString)),this,SLOT(Edit(QString,QString,QString)));
+    Dlg.Read(ui->tableWidget->item(ui->tableWidget->currentRow(),0)->text(),ui->tableWidget->item(ui->tableWidget->currentRow(),1)->text(),ui->tableWidget->item(ui->tableWidget->currentRow(),2)->text());
+    Dlg.exec();
+}
+
+void MainWindow::on_actionDelete_triggered(bool checked)
+{
+    if(ui->tableWidget->currentRow()>-1)
+    {
+        if(QMessageBox::warning(this, tr("Delete"),tr("Delete?"),QMessageBox::Ok| QMessageBox::Cancel,QMessageBox::Ok)== QMessageBox::Ok)
+        {
+            Delete();
+            ui->tableWidget->removeRow(ui->tableWidget->currentRow());
+        }
+    }
+}
+
+void MainWindow::Edit(QString Edit_idx, QString Edit_Date, QString Edit_Content)
+{
+    QSqlDatabase DB=QSqlDatabase::database("MainDB");
+
+    try
+    {
+        if(!DB.isOpen())
+        {
+            QSqlDatabase::removeDatabase("MainDB");
+            DBInit();
+        }
+
+        QSqlQuery query(DB);
+
+        query.exec(QString("update main_tb set date='%1',content='%2' where idx=%3")
+                   .arg(Edit_Date,Edit_Content).arg(Edit_idx.toInt()));
+
+        ui->tableWidget->resizeColumnsToContents();
+        ui->tableWidget->resizeRowsToContents();
+        DB.close();
+    }
+
+    catch(QException &e)
+    {
+        QMessageBox::warning(this,tr("Warning"),QString("%1\n%2").arg(tr("Database Error!"),e.what()),QMessageBox::Ok);
+        QSqlDatabase::removeDatabase("MainDB");
+    }
+}

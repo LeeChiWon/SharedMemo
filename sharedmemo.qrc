@@ -9,5 +9,7 @@
         <file>Img/printer.png</file>
         <file>Lang/Lang_ko_KR.qm</file>
         <file>Img/preview.png</file>
+        <file>Img/delete.png</file>
+        <file>Img/edit.png</file>
     </qresource>
 </RCC>
